@@ -1,0 +1,28 @@
+<table class="table">
+    <thead>
+      <tr>
+        <th>image</th>
+        <th>name</th>
+        <th>フォロー数</th>
+        <th>フォロワー数</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @users.each do |user| %>
+        <tr>
+          <td>
+            <% if user.profile_image.attached? %>
+              <%= image_tag user.profile_image.variant(resize_to_fill: [50, 50]), class: "rounded" %>
+            <% else %>
+              <%= image_tag "no_image.jpg", size: "50x50" %>
+            <% end %>
+          </td>
+          <td><%= user.name %></td>
+          <td>フォロー数: <%= user.following.count %></td>
+          <td>フォロワー数: <%= user.followers.count %></td>
+          <td><%= link_to "Show", user_path(user) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>

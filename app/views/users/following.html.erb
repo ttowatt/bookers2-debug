@@ -1,0 +1,7 @@
+<h2>Follow Users</h2>
+
+<% if @users.any? %>
+  <%= render "list", users: @users %>
+<% else %>
+  <p>ユーザーはいません</p>
+<% end %>
