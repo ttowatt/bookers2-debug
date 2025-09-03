@@ -1,0 +1,12 @@
+<% if book.favorites.exists?(user_id: current_user.id) %>
+  <%= button_to book_favorite_path(book), method: :delete, class: "btn p-0 border-0 bg-transparent" do %>
+    <i class="fa-solid fa-heart text-danger"></i>
+    <span><%= book.favorites.count %></span>
+  <% end %>
+<% else %>
+  <%= button_to book_favorite_path(book), method: :post, class: "btn p-0 border-0 bg-transparent" do %>
+    <i class="fa-solid fa-heart text-primary"></i>
+    <span><%= book.favorites.count %></span>
+  <% end %>
+<% end %>
+
