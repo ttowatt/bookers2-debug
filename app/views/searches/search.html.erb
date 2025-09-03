@@ -1,0 +1,53 @@
+<h2>Books search for "<%= @keyword %>"</h2>
+<% if @results.any? %>
+  <table class='table table-hover'>
+    <thead>
+      <tr>
+        <% if @model == "book" %>
+          <th></th>
+          <th>Title</th>
+          <th>Opinion</th>
+        <% elsif @model == "user" %>
+          <th></th>
+          <th>Name</th>
+          <th>Follow</th>
+        <% end %>
+      </tr>
+    </thead>
+    <tbody>
+      <% @results.each do |item| %>
+        <% if @model == "book" %>
+          <tr>
+            <td>
+              <%= link_to item.user do %>
+                <%= image_tag item.user.get_profile_image, size: '50x50', class: "rounded" %>
+              <% end %>
+            </td>
+            <td><%= link_to item.title, book_path(item) %></td>
+            <td><%= item.body %></td>
+          </tr>
+        <% elsif @model == "user" %>
+          <tr>
+            <td>
+              <%= link_to item do %>
+                <%= image_tag item.get_profile_image, size: '50x50', class: "rounded" %>
+              <% end %>
+            </td>
+            <td><%= link_to item.name, user_path(item) %></td>
+            <td>
+              <% if current_user != item %>
+                <% if current_user.following?(item) %>
+                  <%= button_to "フォロー外す", unfollow_user_path(item), method: :delete, class: 'btn btn-info btn-sm' %>
+                <% else %>
+                  <%= button_to "フォローする", follow_user_path(item), method: :post, class: 'btn btn-success btn-sm' %>
+                <% end %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>該当する結果はありませんでした。</p>
+<% end %>
