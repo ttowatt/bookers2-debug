@@ -1,26 +1,36 @@
 class BookCommentsController < ApplicationController
-  before_action :authenticate_user!
+  before_action :set_book
 
   def create
-    book = Book.find(params[:book_id])
-    comment = book.book_comments.new(book_comment_params)
-    comment.user_id = current_user.id
-    if comment.save
-      redirect_back(fallback_location: book_path(book)) 
+    @comment = @book.book_comments.new(book_comment_params)
+    @comment.user = current_user
+    if @comment.save
+      respond_to do |format|
+        format.html { redirect_to @book }
+        format.js
+      end
     else
-      redirect_back(fallback_location: book_path(book), alert: "コメントを入力してください")
+      respond_to do |format|
+        format.html { redirect_to @book, alert: "コメントを入力してください" }
+        format.js
+      end
     end
   end
 
   def destroy
-    comment = BookComment.find(params[:id])
-    if comment.user == current_user
-      comment.destroy
+    @comment = @book.book_comments.find(params[:id])
+    @comment.destroy if @comment.user == current_user
+    respond_to do |format|
+      format.html { redirect_to @book }
+      format.js
     end
-    redirect_back(fallback_location: book_path(comment.book))
   end
 
   private
+
+  def set_book
+    @book = Book.find(params[:book_id])
+  end
 
   def book_comment_params
     params.require(:book_comment).permit(:comment)

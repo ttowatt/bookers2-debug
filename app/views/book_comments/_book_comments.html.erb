@@ -1,0 +1,23 @@
+<div class="book-comments">
+  <ul class="list-unstyled">
+    <% book.book_comments.each do |comment| %>
+      <li class="d-flex mb-3">
+        <div class="me-3 text-center" style="width: 80px;">
+          <%= link_to(comment.user) do %>
+            <%= image_tag comment.user.get_profile_image, size: "60x60" %>
+            <div><%= comment.user.name %></div>
+          <% end %>
+        </div>
+        <div class="flex-grow-1 d-flex align-items-center">
+          <p class="mb-1"><%= comment.comment %></p>
+          <% if comment.user == current_user %>
+            <%= link_to "Destroy",book_book_comment_path(book, comment),
+                        method: :delete,
+                        remote: true,
+                        class: "btn btn-sm btn-danger" %>
+          <% end %>
+        </div>
+      </li>
+    <% end %>
+  </ul>
+</div>
