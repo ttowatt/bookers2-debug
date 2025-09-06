@@ -34,4 +34,35 @@ class User < ApplicationRecord
   def following?(other_user)
     following.include?(other_user)
   end
+
+  def today_posts
+    books.where(created_at: Time.zone.now.all_day).count
+  end
+
+  # 昨日の投稿数
+  def yesterday_posts
+    books.where(created_at: 1.day.ago.all_day).count
+  end
+
+  # 前日比（昨日と今日の比率）
+  def daily_comparison
+    return 0 if yesterday_posts == 0
+    (today_posts.to_f / yesterday_posts.to_f * 100).round
+  end
+
+  # 今週の投稿数（例：土曜〜金曜を1週間とする場合）
+  def this_week_posts
+    books.where(created_at: Time.zone.now.all_week(:saturday)).count
+  end
+
+  # 先週の投稿数
+  def last_week_posts
+    books.where(created_at: 1.week.ago.all_week(:saturday)).count
+  end
+
+  # 前週比
+  def weekly_comparison
+    return 0 if last_week_posts == 0
+    (this_week_posts.to_f / last_week_posts.to_f * 100).round
+  end
 end
